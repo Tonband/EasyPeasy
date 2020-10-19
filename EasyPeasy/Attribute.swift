@@ -60,8 +60,7 @@ open class Attribute {
     
     /// `Attribute` applied to the view
     open var createAttribute: ReferenceAttribute {
-        debugPrint("This point shouldn't have been reached")
-        return .width
+        fatalError("Subclasses must override .createAttribute")
     }
     
     /// Reference `UIView` of the constraint
@@ -192,8 +191,7 @@ open class Attribute {
      */
     @discardableResult func createConstraints(for item: Item) -> [NSLayoutConstraint] {
         guard self.ownedByItem || item.owningView != nil else {
-            debugPrint("EasyPeasy Attribute cannot be applied to item \(item) as its superview/owningView is nil")
-            return []
+            fatalError("Cannot create constraint for item \(item) with nil .owningView")
         }
         
         // Reference to the target view
