@@ -43,26 +43,6 @@ public extension Item {
     var easy: EasyPeasy {
         return EasyPeasy(item: self)
     }
-    
-    /**
-         This method will trigger the recreation of the constraints
-         created using *EasyPeasy* for the current view. `Condition`
-         closures will be evaluated again
-     */
-    @available(iOS, deprecated: 1.5.1, message: "Use easy.reload() instead")
-    func easy_reload() {
-        self.reload()
-    }
-    
-    /**
-         Clears all the constraints applied with EasyPeasy to the
-         current `UIView`
-     */
-    @available(iOS, deprecated: 1.5.1, message: "Use easy.clear() instead")
-    func easy_clear() {
-        self.clear()
-    }
-    
 }
 
 /**

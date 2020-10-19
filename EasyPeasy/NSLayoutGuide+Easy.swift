@@ -12,6 +12,9 @@
     
 import AppKit
     
+
+infix operator <-
+
 /**
     Apply operator definitions
  */

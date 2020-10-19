@@ -23,25 +23,12 @@ public enum Priority {
     case medium
     case low
     
-    @available(*, deprecated, message: "Use custom case instead")
-    case customPriority(Float)
-    @available(*, deprecated, message: "Use required case instead")
-    case highPriority
-    @available(*, deprecated, message: "Use medium case instead")
-    case mediumPriority
-    @available(*, deprecated, message: "Use low case instead")
-    case lowPriority
-    
     /**
         `UILayoutPriority` equivalent to the current case
         - returns `UILayoutPriority`
      */
     func layoutPriority() -> Float {
         switch self {
-        case .customPriority(let value): return value
-        case .highPriority: return 1000.0
-        case .mediumPriority: return 500.0
-        case .lowPriority: return 1.0
         case .custom(let value): return value
         case .required: return 1000.0
         case .high: return 750.0
