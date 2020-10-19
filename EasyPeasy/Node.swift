@@ -197,33 +197,7 @@ class Node {
     
 }
 
-#if os(iOS) || os(tvOS)
     
-/**
-     Extends `ReferenceAttribute` to ease the work carried
-     out by a `Node`
- */
-private extension ReferenceAttribute {
-    
-    /// This computed variable defines which subnode
-    /// every `Attribute` belongs to
-    var subnode: Subnode {
-        switch self {
-        case .left, .leading, .leftMargin, .leadingMargin, .top, .firstBaseline, .topMargin:
-            return .left
-        case .right, .trailing, .rightMargin, .trailingMargin, .bottom, .lastBaseline, .bottomMargin:
-            return .right
-        case .centerX, .centerY, .centerXWithinMargins, .centerYWithinMargins:
-            return .center
-        case .width, .height:
-            return .dimension
-        }
-    }
-    
-}
-    
-#else
-  
 /**
      Extends `ReferenceAttribute` to ease the work carried
      out by a `Node`
@@ -242,9 +216,15 @@ private extension ReferenceAttribute {
             return .center
         case .width, .height:
             return .dimension
+        #if os(iOS) || os(tvOS)
+        case .leftMargin, .leadingMargin, .topMargin:
+            return .left
+        case .rightMargin, .trailingMargin, .bottomMargin:
+            return .right
+        case .centerXWithinMargins, .centerYWithinMargins:
+            return .center
+        #endif
         }
     }
     
 }
-
-#endif
