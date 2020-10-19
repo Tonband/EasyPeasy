@@ -8,11 +8,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
+
 
 /**
     `Attribute` that leads on the application of multiple
@@ -54,7 +51,6 @@ open class CompoundAttribute: Attribute {
         return self
     }
     
-    #if os(iOS)
     /**
         Sets the `when` closure of the `Attribute` and each one
         of the `Attribute` objects shaping the `CompoundAttribute`
@@ -69,6 +65,4 @@ open class CompoundAttribute: Attribute {
         }
         return self
     }
-    #endif
-    
 }

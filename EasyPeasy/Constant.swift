@@ -8,22 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
-
-/**
-    Alias of `NSLayoutRelation`
- */
-#if os(OSX) && swift(>=4.0)
-    public typealias Relation = NSLayoutConstraint.Relation
-#elseif swift(>=4.2)
-    public typealias Relation = NSLayoutConstraint.Relation
-#else
-    public typealias Relation = NSLayoutRelation
-#endif
 
 /**
     Struct that aggregates `NSLayoutRelation`, constant and multiplier of a 
@@ -35,7 +20,7 @@ public struct Constant {
     public let value: CGFloat
     
     /// Relation that applies to the `value` of the `Constant`
-    public let relation: Relation
+    public let relation: NSLayoutConstraint.Relation
     
     /// Multiplier of the `Constant`
     public let multiplier: CGFloat
@@ -48,7 +33,7 @@ public struct Constant {
         - parameter multiplier: Multiplier of the `Constant`
         - returns: the `Constant` struct created
      */
-    public init(value: CGFloat, relation: Relation, multiplier: CGFloat) {
+    public init(value: CGFloat, relation: NSLayoutConstraint.Relation, multiplier: CGFloat) {
         self.value = value
         self.relation = relation
         self.multiplier = multiplier

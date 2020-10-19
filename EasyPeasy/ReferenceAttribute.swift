@@ -8,19 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if swift(>=4.2) && (os(iOS) || os(tvOS))
-    import UIKit
-    typealias LayoutConstraintAttribute = NSLayoutConstraint.Attribute
-#elseif os(iOS) || os(tvOS)
-    import UIKit
-    typealias LayoutConstraintAttribute = NSLayoutAttribute
-#elseif os(OSX) && swift(>=4.0)
-    import AppKit
-    typealias LayoutConstraintAttribute = NSLayoutConstraint.Attribute
-#elseif os(OSX)
-    import AppKit
-    typealias LayoutConstraintAttribute = NSLayoutAttribute
-#endif
+import UIKit
 
 /**
     An enum representation of the different attribute
@@ -43,7 +31,6 @@ public enum ReferenceAttribute {
     case centerY
     case firstBaseline
     case lastBaseline
-#if os(iOS) || os(tvOS)
     case leftMargin
     case rightMargin
     case topMargin
@@ -52,7 +39,6 @@ public enum ReferenceAttribute {
     case trailingMargin
     case centerXWithinMargins
     case centerYWithinMargins
-#endif
     
     /// Reference attribute opposite to the current one
     /// for those that have and need an opposite
@@ -64,7 +50,6 @@ public enum ReferenceAttribute {
         case .bottom: return .top
         case .leading: return .trailing
         case .trailing: return .leading
-        #if os(iOS) || os(tvOS)
         case .leftMargin: return .rightMargin
         case .rightMargin: return .leftMargin
         case .topMargin: return .bottomMargin
@@ -73,7 +58,6 @@ public enum ReferenceAttribute {
         case .trailingMargin: return .leadingMargin
         case .centerXWithinMargins, .centerYWithinMargins:
             return self
-        #endif
         case .width, .height, .centerX, .centerY, .firstBaseline, .lastBaseline:
             return self
         }
@@ -81,7 +65,7 @@ public enum ReferenceAttribute {
     
     /// AutoLayout attribute equivalent of the current reference
     /// attribute
-    var layoutAttribute: LayoutConstraintAttribute {
+    var layoutAttribute: NSLayoutConstraint.Attribute {
         switch self {
         case .width: return .width
         case .height: return .height
@@ -94,17 +78,7 @@ public enum ReferenceAttribute {
         case .centerX: return .centerX
         case .centerY: return .centerY
         case .lastBaseline: return .lastBaseline
-        case .firstBaseline:
-            #if os(iOS) || os(tvOS)
-            return .firstBaseline
-            #else
-            if #available(OSX 10.11, *) {
-                return .firstBaseline
-            } else {
-                return .lastBaseline
-            }
-            #endif
-        #if os(iOS) || os(tvOS)
+        case .firstBaseline: return .firstBaseline
         case .leftMargin: return .leftMargin
         case .rightMargin: return .rightMargin
         case .topMargin: return .topMargin
@@ -113,7 +87,6 @@ public enum ReferenceAttribute {
         case .trailingMargin: return .trailingMargin
         case .centerXWithinMargins: return .centerXWithinMargins
         case .centerYWithinMargins: return .centerYWithinMargins
-        #endif
         }
     }
     
@@ -123,14 +96,12 @@ public enum ReferenceAttribute {
     /// objects
     var shouldInvertConstant: Bool {
         switch self {
-        case .width, .height, .centerX, .centerY:           return false
-        case .left, .leading, .top, .firstBaseline:         return false
-        case .right, .trailing, .bottom, .lastBaseline:     return true
-        #if os(iOS) || os(tvOS)
-        case .centerXWithinMargins, .centerYWithinMargins:  return false
-        case .leftMargin, .leadingMargin, .topMargin:       return false
-        case .rightMargin, .trailingMargin, .bottomMargin:  return true
-        #endif
+        case .width, .height, .centerX, .centerY, .centerXWithinMargins, .centerYWithinMargins:
+            return false
+        case .left, .leading, .top, .firstBaseline, .leftMargin, .leadingMargin, .topMargin:
+            return false
+        case .right, .trailing, .bottom, .lastBaseline, .rightMargin, .trailingMargin, .bottomMargin:
+            return true
         }
     }
     
@@ -146,16 +117,12 @@ extension ReferenceAttribute {
     /// depending on the Axis the `ReferenceAttribute` applies
     var signatureString: String {
         switch self {
-        case .left, .leading, .right, .trailing, .centerX, .width:
+        case .left, .leftMargin, .leading, .leadingMargin, .right, .rightMargin,
+             .trailing, .trailingMargin, .centerX, .centerXWithinMargins, .width:
             return "h_"
-        case .top, .firstBaseline, .bottom, .lastBaseline, .centerY, .height:
+        case .top, .topMargin, .firstBaseline, .bottom, .bottomMargin, .lastBaseline,
+             .centerY, .centerYWithinMargins, .height:
             return "v_"
-        #if os(iOS) || os(tvOS)
-        case .leftMargin, .leadingMargin, .rightMargin, .trailingMargin, .centerXWithinMargins:
-            return "h_"
-        case .topMargin, .bottomMargin, .centerYWithinMargins:
-            return "v_"
-        #endif
         }
     }
     

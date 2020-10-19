@@ -8,11 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
 
 var easy_attributesReference: Int = 0
 
@@ -120,7 +116,7 @@ extension Item {
     func apply(attributes: [Attribute]) -> [NSLayoutConstraint] {
         // Before doing anything ensure that this item has translates autoresizing
         // mask into constraints disabled
-        self.disableAutoresizingToConstraints()
+        (self as? UIView)?.translatesAutoresizingMaskIntoConstraints = false
         
         var layoutConstraints: [NSLayoutConstraint] = []
         var activateConstraints: [NSLayoutConstraint] = []
@@ -162,17 +158,4 @@ extension Item {
         // to be activated/deactivated
         return node.add(attribute: attribute)
     }
-    
-    /**
-         Sets `translatesAutoresizingMaskIntoConstraints` to `false` if the
-         current `Item` implements it
-     */
-    private func disableAutoresizingToConstraints() {
-        #if os(iOS) || os(tvOS)
-        (self as? UIView)?.translatesAutoresizingMaskIntoConstraints = false
-        #else
-        (self as? NSView)?.translatesAutoresizingMaskIntoConstraints = false
-        #endif
-    }
-    
 }

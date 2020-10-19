@@ -9,7 +9,7 @@
 // SOFTWARE.
 
 
-#if os(iOS) && EASY_RELOAD
+#if EASY_RELOAD
 
 /**
      Method that sets up the swizzling of `traitCollectionDidChange` if the

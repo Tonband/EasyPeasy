@@ -8,11 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
 
 /**
     `Nodes` group the `Attributes` classifying them depending
@@ -49,7 +45,7 @@ class Node {
    
     /// `Attributes` occupying any `Subnode`
     var activeAttributes: [Attribute] {
-        return [self.left, self.right, self.center, self.dimension].easy_flatMap { $0 }
+        [self.left, self.right, self.center, self.dimension].compactMap { $0 }
     }
     
     /**
@@ -81,15 +77,15 @@ class Node {
         switch nodeAttribute {
         case .left:
             if self.left === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.left, self.center].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.left, self.center].compactMap { $0 })
             self.left = attribute
         case .right:
             if self.right === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.right, self.center].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.right, self.center].compactMap { $0 })
             self.right = attribute
         case .center:
             if self.center === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.center, self.left, self.right].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.center, self.left, self.right].compactMap { $0 })
             self.center = attribute
         case .dimension:
             if self.dimension === attribute { return nil }
@@ -208,22 +204,14 @@ private extension ReferenceAttribute {
     /// every `Attribute` belongs to
     var subnode: Subnode {
         switch self {
-        case .left, .leading, .top, .firstBaseline:
+        case .left, .leftMargin, .leading, .leadingMargin, .top, .topMargin, .firstBaseline:
             return .left
-        case .right, .trailing, .bottom, .lastBaseline:
+        case .right, .rightMargin, .trailing, .trailingMargin, .bottom, .bottomMargin, .lastBaseline:
             return .right
-        case .centerX, .centerY:
+        case .centerX, .centerY, .centerXWithinMargins, .centerYWithinMargins:
             return .center
         case .width, .height:
             return .dimension
-        #if os(iOS) || os(tvOS)
-        case .leftMargin, .leadingMargin, .topMargin:
-            return .left
-        case .rightMargin, .trailingMargin, .bottomMargin:
-            return .right
-        case .centerXWithinMargins, .centerYWithinMargins:
-            return .center
-        #endif
         }
     }
     
