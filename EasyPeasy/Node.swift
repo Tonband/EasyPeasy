@@ -8,11 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
 
 /**
     `Nodes` group the `Attributes` classifying them depending
@@ -49,7 +45,7 @@ class Node {
    
     /// `Attributes` occupying any `Subnode`
     var activeAttributes: [Attribute] {
-        return [self.left, self.right, self.center, self.dimension].easy_flatMap { $0 }
+        [self.left, self.right, self.center, self.dimension].compactMap { $0 }
     }
     
     /**
@@ -81,15 +77,15 @@ class Node {
         switch nodeAttribute {
         case .left:
             if self.left === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.left, self.center].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.left, self.center].compactMap { $0 })
             self.left = attribute
         case .right:
             if self.right === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.right, self.center].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.right, self.center].compactMap { $0 })
             self.right = attribute
         case .center:
             if self.center === attribute { return nil }
-            deactivate = self.deactivate(attributes: [self.center, self.left, self.right].easy_flatMap { $0 })
+            deactivate = self.deactivate(attributes: [self.center, self.left, self.right].compactMap { $0 })
             self.center = attribute
         case .dimension:
             if self.dimension === attribute { return nil }
@@ -197,7 +193,6 @@ class Node {
     
 }
 
-#if os(iOS) || os(tvOS)
     
 /**
      Extends `ReferenceAttribute` to ease the work carried
@@ -209,9 +204,9 @@ private extension ReferenceAttribute {
     /// every `Attribute` belongs to
     var subnode: Subnode {
         switch self {
-        case .left, .leading, .leftMargin, .leadingMargin, .top, .firstBaseline, .topMargin:
+        case .left, .leftMargin, .leading, .leadingMargin, .top, .topMargin, .firstBaseline:
             return .left
-        case .right, .trailing, .rightMargin, .trailingMargin, .bottom, .lastBaseline, .bottomMargin:
+        case .right, .rightMargin, .trailing, .trailingMargin, .bottom, .bottomMargin, .lastBaseline:
             return .right
         case .centerX, .centerY, .centerXWithinMargins, .centerYWithinMargins:
             return .center
@@ -221,30 +216,3 @@ private extension ReferenceAttribute {
     }
     
 }
-    
-#else
-  
-/**
-     Extends `ReferenceAttribute` to ease the work carried
-     out by a `Node`
- */
-private extension ReferenceAttribute {
-    
-    /// This computed variable defines which subnode
-    /// every `Attribute` belongs to
-    var subnode: Subnode {
-        switch self {
-        case .left, .leading, .top, .firstBaseline:
-            return .left
-        case .right, .trailing, .bottom, .lastBaseline:
-            return .right
-        case .centerX, .centerY:
-            return .center
-        case .width, .height:
-            return .dimension
-        }
-    }
-    
-}
-
-#endif

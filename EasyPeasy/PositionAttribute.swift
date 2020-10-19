@@ -8,24 +8,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
-
 import UIKit
 
-/// Alias of UIEdgeInsets
-public typealias Insets = UIEdgeInsets
-
-#else
-
-import AppKit
-
-#if swift(>=4.0)
-public typealias Insets = NSEdgeInsets
-#else
-public typealias Insets = EdgeInsets
-#endif
-    
-#endif
 
 /**
      Superclass for those `Attribute` objects that imply position
@@ -235,7 +219,7 @@ public class Edges: CompoundAttribute {
         properties of each one of the sub `Attribute` objects
         - returns: the `CompoundAttribute` instance created
      */
-    public init(_ edgeInsets: Insets) {
+    public init(_ edgeInsets: UIEdgeInsets) {
         super.init()
         self.attributes = [
             Top(CGFloat(edgeInsets.top)),

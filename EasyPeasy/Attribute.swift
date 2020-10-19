@@ -8,11 +8,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if os(iOS) || os(tvOS)
 import UIKit
-#else
-import AppKit
-#endif
 
 /**
     Typealias of a closure with no parameters and `Bool`
@@ -23,7 +19,6 @@ import AppKit
  */
 public typealias Condition = () -> Bool
 
-#if os(iOS)
 /**
     Typealias of a closure with an `EasyContext` struct as parameter and `Bool`
     as returning type.
@@ -32,7 +27,6 @@ public typealias Condition = () -> Bool
     be applied or not.
  */
 public typealias ContextualCondition = (EasyContext) -> Bool
-#endif
 
 /**
     This class is the abstraction of `NSLayoutConstraint`
@@ -60,8 +54,7 @@ open class Attribute {
     
     /// `Attribute` applied to the view
     open var createAttribute: ReferenceAttribute {
-        debugPrint("This point shouldn't have been reached")
-        return .width
+        fatalError("Subclasses must override .createAttribute")
     }
     
     /// Reference `UIView` of the constraint
@@ -166,7 +159,6 @@ open class Attribute {
         return self
     }
     
-    #if os(iOS)
     /**
         Sets the `when` closure of the `Attribute`
         - parameter closure: `Closure` to be called before installing a
@@ -177,7 +169,6 @@ open class Attribute {
         self.condition = closure
         return self
     }
-    #endif
     
     // MARK: Internal methods (acting as protected)
     
@@ -192,8 +183,7 @@ open class Attribute {
      */
     @discardableResult func createConstraints(for item: Item) -> [NSLayoutConstraint] {
         guard self.ownedByItem || item.owningView != nil else {
-            debugPrint("EasyPeasy Attribute cannot be applied to item \(item) as its superview/owningView is nil")
-            return []
+            fatalError("Cannot create constraint for item \(item) with nil .owningView")
         }
         
         // Reference to the target view
@@ -212,15 +202,7 @@ open class Attribute {
         )
         
         // Set priority
-        #if swift(>=4.0)
-            #if os(iOS) || os(tvOS)
-                layoutConstraint.priority = UILayoutPriority(rawValue: self.priority.layoutPriority())
-            #else
-                layoutConstraint.priority = NSLayoutConstraint.Priority(rawValue: self.priority.layoutPriority())
-            #endif
-        #else
-            layoutConstraint.priority = self.priority.layoutPriority()
-        #endif
+        layoutConstraint.priority = UILayoutPriority(rawValue: self.priority.layoutPriority())
         
         // Reference resulting constraint
         self.layoutConstraint = layoutConstraint
@@ -238,12 +220,10 @@ open class Attribute {
     func shouldInstall() -> Bool {
         // If there is a ContextualCondition then create the context
         // struct and call the closure
-        #if os(iOS)
         let item = self.createItem?.owningView ?? self.createItem
         if let contextualCondition = self.condition as? ContextualCondition, let view = item as? EasyView {
             return contextualCondition(EasyContext(with: view.traitCollection))
         }
-        #endif
         
         // Evaluate condition result
         if let condition = self.condition as? Condition {
@@ -317,7 +297,6 @@ public extension Array where Element: Attribute {
         return self
     }
     
-    #if os(iOS)
     /**
         Sets the `when` closure of each one of `Attributes` within the current
         `Array`. If the condition was already set this method overrides it
@@ -331,6 +310,4 @@ public extension Array where Element: Attribute {
         }
         return self
     }
-    #endif
-    
 }

@@ -7,8 +7,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-#if os(iOS) || os(tvOS)
     
 import UIKit
 
@@ -244,7 +242,7 @@ public class Margins: CompoundAttribute {
         properties of each one of the sub `Attribute` objects
         - returns: the `CompoundAttribute` instance created
      */
-    public init(_ edgeInsets: Insets) {
+    public init(_ edgeInsets: UIEdgeInsets) {
         super.init()
         self.attributes = [
             TopMargin(CGFloat(edgeInsets.top)),
@@ -324,5 +322,3 @@ public class CenterWithinMargins: CompoundAttribute {
     }
     
 }
-    
-#endif
